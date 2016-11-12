@@ -1,0 +1,63 @@
+<App>
+    <DockPanel>
+        <StatusBarBackground Dock="Top" />
+        <ScrollView ClipToBounds="true">
+            <StackPanel>
+                <Text FontSize="30" Alignment="Center">Socket Demo</Text>
+                <Text FontSize="12" Alignment="Center">Run 'node echo_srv.js' first !</Text>
+                <Button Text="Send Current Date" Clicked="{onClick}"/>
+
+                <Text Value="{readText}" FontSize="12"  Alignment="Center"></Text>
+
+                <Text Value="{errorText}" TextColor="#FF0000" FontSize="12"  Alignment="Center"></Text>
+
+                <Text Value="{connectedText}" TextColor="#00FF00" FontSize="12"  Alignment="Center"></Text>
+                
+            </StackPanel>
+        </ScrollView>
+        <JavaScript>
+          
+          var Socket = require('MySocket');
+          var Observable = require('FuseJS/Observable');
+
+          var readText = Observable('');
+          var errorText = Observable('');
+          var connectedText = Observable('');
+          
+          Socket.connect("127.0.0.1", "8888");
+          
+          connectedText.value = "Connecting...";
+
+          Socket.onError = function(message) {
+            errorText.value = message;
+          }
+
+          Socket.onConnected = function(message) {
+            connectedText.value = "Connected";
+          }
+
+          Socket.onDisconnected = function(message) {
+            connectedText.value = "";
+          }
+
+          Socket.onMessageReceived = function(message) {
+            readText.value = message;
+          }
+          
+          function onClick() {
+            Socket.send( +new Date() + "\n");
+          }
+
+          function onClickRead() {
+            Socket.read();
+          }
+
+          module.exports = {
+            readText: readText,
+            errorText: errorText,
+            connectedText: connectedText,
+            onClick: onClick          
+          }
+      </JavaScript>
+    </DockPanel>
+</App>
