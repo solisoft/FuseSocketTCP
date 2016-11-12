@@ -48,10 +48,6 @@
             Socket.send( +new Date() + "\n");
           }
 
-          function onClickRead() {
-            Socket.read();
-          }
-
           module.exports = {
             readText: readText,
             errorText: errorText,
