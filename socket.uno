@@ -7,17 +7,13 @@ using Uno.Text;
 using Uno.Threading;
 
 [UXGlobalModule]
-public class MySocket : NativeModule
+public class MySocket : NativeEventEmitterModule
 {
     static readonly MySocket _instance;
     public delegate void ShowValue();
-    NativeEvent _nativeEvent;
-    NativeEvent _nativeEventConnected;
-    NativeEvent _nativeEventDisconnected;
-    NativeEvent _nativeEventError;
     Socket socket;
-
     public MySocket()
+        : base(true, "onMessageReceived", "onConnected", "onDisconnected", "onError")
     {
         // Make sure we're only initializing the module once
         if(_instance != null) return;
@@ -26,16 +22,7 @@ public class MySocket : NativeModule
         
         AddMember(new NativeFunction("connect", (NativeCallback)Connect));
         AddMember(new NativeFunction("send", (NativeCallback)Send));       
-        
-        _nativeEvent = new NativeEvent("onMessageReceived");
-        _nativeEventConnected = new NativeEvent("onConnected");
-        _nativeEventDisconnected = new NativeEvent("onDisconnected");
-        _nativeEventError = new NativeEvent("onError");
-        
-        AddMember(_nativeEvent);
-        AddMember(_nativeEventConnected);
-        AddMember(_nativeEventDisconnected);
-        AddMember(_nativeEventError);
+    
     }
 
     // Send
@@ -46,7 +33,7 @@ public class MySocket : NativeModule
         try {
           socket.Send(Ascii.GetBytes(message));
         } catch(SocketException e) {
-          _nativeEventError.RaiseAsync(e.Message.ToString());
+          Emit("onError", e.Message.ToString());
         }
         return "";
     }
@@ -60,11 +47,11 @@ public class MySocket : NativeModule
         int port = int.Parse(args[1] as string);
         try {
           socket.Connect(address, port);
-          _nativeEventConnected.RaiseAsync("Connected");
+          Emit("onConnected", "Connected");
           var t = Thread.Create(Read);
           t.Start();
         } catch(SocketException e) {
-          _nativeEventError.RaiseAsync(e.Message.ToString());
+          Emit("onError", e.Message.ToString());
         }
         return "";
     }
@@ -81,12 +68,12 @@ public class MySocket : NativeModule
             byte[] read = new byte[1024];
             var r = socket.Receive(read, 0, read.Length, SocketFlags.None);
             if(r == 0) loop = false;
-            _nativeEvent.RaiseAsync(Ascii.GetString(read));
+            Emit("onMessageReceived", Ascii.GetString(read));
           } catch(SocketException e) {
-            _nativeEventError.RaiseAsync(e.Message.ToString());
+            Emit("onError", e.Message.ToString());
           }
         }
-        _nativeEventDisconnected.RaiseAsync("Disconnected");
+        Emit("onDisconnected", "Disconnected");
     }
     
 }

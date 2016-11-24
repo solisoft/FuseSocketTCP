@@ -28,21 +28,21 @@
           
           connectedText.value = "Connecting...";
 
-          Socket.onError = function(message) {
+          Socket.on("onError", function(message) {
             errorText.value = message;
-          }
+          })
 
-          Socket.onConnected = function(message) {
+          Socket.on("onConnected", function(message) {
             connectedText.value = "Connected";
-          }
+          })
 
-          Socket.onDisconnected = function(message) {
+          Socket.on("onDisconnected", function(message) {
             connectedText.value = "";
-          }
+          })
 
-          Socket.onMessageReceived = function(message) {
+          Socket.on("onMessageReceived", function(message) {
             readText.value = message;
-          }
+          })
           
           function onClick() {
             Socket.send( +new Date() + "\n");
