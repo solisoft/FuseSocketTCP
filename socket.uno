@@ -19,14 +19,14 @@ public class MySocket : NativeEventEmitterModule
         if(_instance != null) return;
         _instance = this;
         Resource.SetGlobalKey(_instance, "MySocket");
-        
+
         AddMember(new NativeFunction("connect", (NativeCallback)Connect));
-        AddMember(new NativeFunction("send", (NativeCallback)Send));       
-    
+        AddMember(new NativeFunction("send", (NativeCallback)Send));
+
     }
 
     // Send
-    // Launched via Javascript 
+    // Launched via Javascript
     string Send(Context c, object[] args)
     {
         var message = args[0] as string;
@@ -42,28 +42,28 @@ public class MySocket : NativeEventEmitterModule
     // Launched via Javascript
     string Connect(Context c, object[] args)
     {
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);       
+        socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         var address = args[0] as string;
         int port = int.Parse(args[1] as string);
         try {
           socket.Connect(address, port);
           Emit("onConnected", "Connected");
-          var t = Thread.Create(Read);
+          var t = new Thread(Read);
           t.Start();
         } catch(SocketException e) {
           Emit("onError", e.Message.ToString());
         }
         return "";
     }
-    
+
     // Read
     // Loop on socket.Receive
     void Read()
     {
-        // socket.Connected seems to always be true 
+        // socket.Connected seems to always be true
         // even if server is killed
         var loop = true;
-        while(loop) {           
+        while(loop) {
           try {
             byte[] read = new byte[1024];
             var r = socket.Receive(read, 0, read.Length, SocketFlags.None);
@@ -75,5 +75,5 @@ public class MySocket : NativeEventEmitterModule
         }
         Emit("onDisconnected", "Disconnected");
     }
-    
+
 }
