@@ -11,6 +11,7 @@ Fuse >= 0.32
 I provide a little echo server `node echo_srv.js` which run a TCP echo server on 127.0.0.1:8888
 
 Copy the socket.uno into your project then in your view.
+
 Add "Uno.Net.Sockets" to your .unoproj Pacakages.
 
 
