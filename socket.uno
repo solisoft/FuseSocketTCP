@@ -21,6 +21,7 @@ public class MySocket : NativeEventEmitterModule
         Resource.SetGlobalKey(_instance, "MySocket");
 
         AddMember(new NativeFunction("connect", (NativeCallback)Connect));
+        AddMember(new NativeFunction("disconnect", (NativeCallback)Disconnect));
         AddMember(new NativeFunction("send", (NativeCallback)Send));
 
     }
@@ -53,6 +54,14 @@ public class MySocket : NativeEventEmitterModule
         } catch(SocketException e) {
           Emit("onError", e.Message.ToString());
         }
+        return "";
+    }
+
+    // Disconnect
+    // Close the socket
+    string Disconnect(Context c, object[] args)
+    {
+        socket.Close();
         return "";
     }
 
