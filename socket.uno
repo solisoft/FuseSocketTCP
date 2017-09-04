@@ -18,7 +18,7 @@ public class MySocket : NativeEventEmitterModule
         // Make sure we're only initializing the module once
         if(_instance != null) return;
         _instance = this;
-        Resource.SetGlobalKey(_instance, "MySocket");
+        Uno.UX.Resource.SetGlobalKey(_instance, "MySocket");
 
         AddMember(new NativeFunction("connect", (NativeCallback)Connect));
         AddMember(new NativeFunction("disconnect", (NativeCallback)Disconnect));
