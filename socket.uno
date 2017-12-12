@@ -1,6 +1,6 @@
 using Fuse;
 using Fuse.Scripting;
-using Fuse.Reactive;
+using Fuse.Reactive.Resource;
 using Uno.UX;
 using Uno.Net.Sockets;
 using Uno.Text;
