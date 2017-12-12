@@ -12,22 +12,26 @@ I provide a little echo server `node echo_srv.js` which run a TCP echo server on
 
 Copy the socket.uno into your project then in your view.
 
+Add "Uno.Net.Sockets" to your .unoproj Pacakages.
 
 
 ````
 var Socket = require('MySocket');
 Socket.connect("127.0.0.1", "8888");
-Socket.onError = function(message) {
+Socket.on("onError", function(message) {
   // Do something
-}
-Socket.onConnected = function(message) {
+})
+
+Socket.on("onConnected", function(message) {
   // Do something
-}
-Socket.onDisconnected = function(message) {
+})
+
+Socket.on("onDisconnected", function(message) {
   // Do something
-}
-Socket.onMessageReceived = function(message) {
+})
+
+Socket.on("onMessageReceived", function(message) {
   // Do something
-}
+})
 ````
 

@@ -1,9 +1,9 @@
 {
   "RootNamespace":"",
   "Packages": [
-    "Fuse.Maps",
-  	"Fuse",
-  	"FuseJS"
+    "Uno.Net.Sockets",
+    "Fuse",
+    "FuseJS"
   ],
   "Includes": [
     "*"
