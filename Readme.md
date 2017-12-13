@@ -4,7 +4,7 @@ This project is a port of Uno.Net.Socket to Javascript.
 
 ## Requirements
 
-Fuse >= 0.32
+Fuse >= 1.40
 
 ## How to use it
 
